@@ -19,7 +19,7 @@ objpoints = []  # 3d point in real world space
 imgpoints = []  # 2d points in image plane.
 
 
-img = cv2.imread("newleft3.jpg")
+img = cv2.imread("newright3.jpg")
 
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -47,17 +47,22 @@ D = np.zeros((4, 1))
 rvecs = np.zeros((1, 1, 3), dtype=np.float32)
 tvecs = np.zeros((1, 1, 3), dtype=np.float32)
 
-ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints,
-                                                   gray.shape[::-1], None, None)
-print(gray.shape[::-1])
+ret, K, D, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints,
+                                              gray.shape[::-1], None, None)
+
 dim = img.shape[:2]
+print(dim)
+print(type(K))
+print(type(D))
+
+img2 = cv2.imread("newleft0.jpg")
 
 map1, map2 = cv2.initUndistortRectifyMap(
-    mtx, dist, np.eye(3), mtx, dim, cv2.CV_16SC2)
+    K, D, np.eye(3), K, dim, cv2.CV_16SC2)
 undistorted_img = cv2.remap(
-    img, map1, map2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
+    img2, map1, map2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
 
-cv2.imwrite("undist_img.jpg", cv2.resize(undistorted_img, (800, 600)))
+#cv2.imwrite("undist_img.jpg", cv2.resize(undistorted_img, (800, 600)))
 cv2.imshow("undist_img.jpg", cv2.resize(undistorted_img, (800, 600)))
 cv2.waitKey(0)
 cv2.destroyAllWindows()

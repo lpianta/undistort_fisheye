@@ -21,7 +21,7 @@ objp[:, :2] = np.mgrid[0:CHECKERBOARD[0],
 _img_shape = None
 objpoints = []  # 3d point in real world space
 imgpoints = []  # 2d points in image plane.
-images = glob.glob('*.png')
+images = glob.glob('*.jpg')
 for fname in images:
     img = cv2.imread(fname)
     if _img_shape == None:
@@ -46,18 +46,20 @@ K = np.zeros((3, 3))
 D = np.zeros((4, 1))
 rvecs = [np.zeros((1, 1, 3), dtype=np.float64) for i in range(N_OK)]
 tvecs = [np.zeros((1, 1, 3), dtype=np.float64) for i in range(N_OK)]
-rms, _, _, _, _ = \
-    cv2.fisheye.calibrate(
-        objpoints,
-        imgpoints,
-        (3040, 3040),
-        K,
-        D,
-        rvecs,
-        tvecs,
-        calibration_flags,
-        (cv2.TERM_CRITERIA_EPS+cv2.TERM_CRITERIA_MAX_ITER, 30, 1e-6)
-    )
+# rms, _, _, _, _ = \
+#     cv2.fisheye.calibrate(
+#         objpoints,
+#         imgpoints,
+#         (3040, 3040),
+#         K,
+#         D,
+#         rvecs,
+#         tvecs,
+#         calibration_flags,
+#         (cv2.TERM_CRITERIA_EPS+cv2.TERM_CRITERIA_MAX_ITER, 30, 1e-6)
+#     )
+ret, K, D, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints,
+                                              gray.shape[::-1], None, None)
 print("Found " + str(N_OK) + " valid images for calibration")
 print("DIM=" + str(_img_shape[::-1]))
 print("K=np.array(" + str(K.tolist()) + ")")
