@@ -26,6 +26,8 @@ def cut(img_path):
     left_img = img[0:height, width//2:width]
     return left_img, right_img
 
+# Undistort images
+
 
 def undistort(img, K=K, D=D, dim=DIM):
     map1, map2 = cv2.initUndistortRectifyMap(
@@ -34,12 +36,16 @@ def undistort(img, K=K, D=D, dim=DIM):
         img, map1, map2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
     return undistorted_img
 
+# Rotate images
+
 
 def rotate(img, rot):
     if rot == "counterclock":
         return cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
     elif rot == "clock":
         return cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+
+# Concatenate images to get panorama view
 
 
 def final(left, right):
